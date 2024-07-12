@@ -1,0 +1,60 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'macos-latest'
+
+variables:
+  ANDROID_HOME: /Users/runner/Library/Android/sdk
+  EMULATOR_NAME: xamarin_android_emulator
+
+steps:
+- script: |
+    echo "##[group]Install Android Command Line Tools"
+    mkdir -p $ANDROID_HOME/cmdline-tools
+    curl -Lo commandlinetools.zip https://dl.google.com/android/repository/commandlinetools-mac-7583922_latest.zip
+    unzip commandlinetools.zip -d $ANDROID_HOME/cmdline-tools
+    mv $ANDROID_HOME/cmdline-tools/cmdline-tools $ANDROID_HOME/cmdline-tools/latest
+    echo "##[endgroup]"
+  displayName: 'Install Android Command Line Tools'
+
+- script: |
+    echo "##[group]Install Android SDK and Tools"
+    export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH
+    yes | sdkmanager --sdk_root=$ANDROID_HOME "platform-tools" "platforms;android-30" "build-tools;30.0.3" "system-images;android-30;google_apis;x86_64"
+    yes | sdkmanager --licenses
+    echo "##[endgroup]"
+  displayName: 'Install Android SDK'
+
+- script: |
+    echo "##[group]Create and Verify Emulator"
+    export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools:$PATH
+    echo "no" | avdmanager create avd -n $EMULATOR_NAME -k 'system-images;android-30;google_apis;x86_64' --force
+    avdmanager list avd
+    echo "##[endgroup]"
+  displayName: 'Create and Verify Emulator'
+
+- script: |
+    echo "##[group]Start Emulator"
+    export PATH=$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools:$PATH
+    nohup emulator -avd $EMULATOR_NAME -no-snapshot -no-window -gpu off > /dev/null 2>&1 &
+    echo "Waiting for emulator to start"
+    sleep 60
+    $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82'
+    echo "Emulator started"
+    echo "##[endgroup]"
+  displayName: 'Start Emulator'
+
+- script: |
+    echo "##[group]Capture Emulator Screenshot"
+    $ANDROID_HOME/platform-tools/adb exec-out screencap -p > $(Build.ArtifactStagingDirectory)/screenshot.png
+    pathToPublish: '$(Build.ArtifactStagingDirectory)/screenshot.png'
+    artifactName: 'screenshot'
+    publishLocation: 'Container'
+    echo "##[endgroup]"
+  displayName: 'Start Emulator and Capture Screenshot'
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    path: 'screenshots'
+    artifactName: 'emulator-screenshot'
