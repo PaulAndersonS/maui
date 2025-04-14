@@ -207,7 +207,19 @@ class SetPropertiesVisitor(SourceGenContext context, bool stopOnResourceDictiona
                 AddToResourceDictionary(Writer, variable, node, Context);
                 return;
             }
-            Writer.WriteLine($"{variable.Name}.Add({Context.Variables[node].Name});");
+
+            if (propertyType.CanAdd(context))
+            {
+                Writer.WriteLine($"{variable.Name}.Add({Context.Variables[node].Name});");
+             
+            }
+            else
+            //report diagnostic: not a collection
+            {
+                var location = LocationCreate(Context.FilePath!, (IXmlLineInfo)node, localName);
+                //error should be "propertyType does not support Add()"
+                Context.ReportDiagnostic(Diagnostic.Create(Descriptors.MemberResolution, location, localName));
+            }
         }
     }
 
