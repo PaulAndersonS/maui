@@ -217,7 +217,7 @@ class SetPropertiesVisitor(SourceGenContext context, bool stopOnResourceDictiona
             //report diagnostic: not a collection
             {
                 var location = LocationCreate(Context.FilePath!, (IXmlLineInfo)node, localName);
-                //error should be "propertyType does not support Add()"
+                //FIXME error should be "propertyType does not support Add()"
                 Context.ReportDiagnostic(Diagnostic.Create(Descriptors.MemberResolution, location, localName));
             }
         }
