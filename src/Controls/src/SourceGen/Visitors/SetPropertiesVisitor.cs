@@ -109,7 +109,7 @@ class SetPropertiesVisitor(SourceGenContext context, bool stopOnResourceDictiona
             Writer.WriteLine($"{variable.Name}.LoadTemplate = () =>");
             using (PrePost.NewBlock(Writer, begin: "{", end: "};"))
             {
-                var templateContext = new SourceGenContext(Writer, context.Compilation, context.SourceProductionContext, context.XmlnsCache, context.TypeCache, context.RootType!, null) {FilePath = context.FilePath, ParentContext = context};
+                var templateContext = new SourceGenContext(Writer, context.Compilation, context.SourceProductionContext, context.XmlnsCache, context.TypeCache, context.RootType!, null) {FilePath = context.FilePath, ParentContext = context};                
 
                 //inflate the template
 			    node.Accept(new CreateValuesVisitor(templateContext), null);

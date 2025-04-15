@@ -55,12 +55,16 @@ static class ServiceProviderExtensions
             var simpleValueTargetProvider = NamingHelpers.CreateUniqueVariableName(context, context.Compilation.GetTypeByMetadataName("Microsoft.Maui.Controls.Xaml.IProvideValueTarget")!);
             writer.WriteLine($"var {simpleValueTargetProvider} = new global::Microsoft.Maui.Controls.Xaml.Internals.SimpleValueTargetProvider(");
             writer.Indent++;
-            writer.WriteLine($"new object[] {{{String.Join(", ", node.ObjectAndParents(context).Select(v=>v.Name))}}},");
+            writer.WriteLine($"new object[] {{{string.Join(", ", node.ObjectAndParents(context).Select(v=>v.Name))}}},");
             var bpinfo = bpFieldSymbol?.ToFQDisplayString() ?? String.Empty;
             var pinfo = $"typeof({propertySymbol?.ContainingSymbol.ToFQDisplayString()}).GetProperty(\"{propertySymbol?.Name}\")" ?? string.Empty;
             writer.WriteLine($"{(bpFieldSymbol != null ? bpFieldSymbol : propertySymbol != null ? pinfo : "null")},");
-            if (context.Scopes.TryGetValue(node, out var scope))
-                writer.WriteLine($"new [] {{ {scope.namescope.Name} }},");
+            if (context.Scopes.TryGetValue(node, out var scope)){
+                List<string> scopes = [scope.namescope.Name];
+                var values = context.ParentContext?.Scopes.Select(s=> s.Value.namescope.Name).Distinct();
+                scopes.AddRange(values ?? Enumerable.Empty<string>());
+                writer.WriteLine($"new [] {{ {string.Join(", ", scopes)} }},");
+            }
             else
                 writer.WriteLine($"null,");
             writer.WriteLine($"false);");

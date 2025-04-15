@@ -35,6 +35,8 @@ public static class MockSourceGenerator
 
 	public static AdditionalText ToAdditionalText(string path, string text) => CustomAdditionalText.From(path, text);
 
+	public static GeneratorDriverRunResult RunMauiSourceGenerator(Type xamlType, [CallerFilePath] string? codeFile = null)
+		=> CreateMauiCompilation().RunMauiSourceGenerator(xamlType, codeFile);
     public static GeneratorDriverRunResult RunMauiSourceGenerator(this Compilation compilation, Type xamlType, [CallerFilePath] string? codeFile = null)
     {
         var resourceId = XamlResourceIdAttribute.GetResourceIdForType(xamlType);
