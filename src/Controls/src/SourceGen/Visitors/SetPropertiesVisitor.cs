@@ -306,7 +306,36 @@ class SetPropertiesVisitor(SourceGenContext context, bool stopOnResourceDictiona
         => !attached && valueNode is ValueNode && parentVar.Type.GetAllEvents(localName, context).Any();
 
 	static void ConnectEvent(IndentedTextWriter writer, LocalVariable parentVar, string localName, INode valueNode, SourceGenContext context)
-        => writer.WriteLine($"{parentVar.Name}.{localName} += {((ValueNode)valueNode).Value};");
+	{
+        var eventSymbol = parentVar.Type.GetAllEvents(localName, context).First();
+        var eventType = eventSymbol.Type;
+        var handler = (string)((ValueNode)valueNode).Value;
+        var handlerSymbol = context.RootType.GetAllMethods(handler, context).FirstOrDefault(m => 
+        {
+            if (m.Name != handler)
+                return false;
+            var invoke = eventType.GetAllMethods("Invoke", context).FirstOrDefault();
+            if (invoke.Parameters.Length != m.Parameters.Length)
+                return false;
+            if (!invoke.ReturnType.InheritsFrom(m.ReturnType, context))
+                return false;
+            for (int i = 0; i < invoke.Parameters.Length; i++)
+            {
+                if (!invoke.Parameters[i].Type.InheritsFrom(m.Parameters[i].Type, context))
+                    return false;
+            }
+            return true;
+        });
+        if (handlerSymbol == null)
+        {
+            var location = LocationCreate(context.FilePath!, (IXmlLineInfo)valueNode, handler);
+            //FIXME better error message: "handler signature does not match event signature"
+            context.ReportDiagnostic(Diagnostic.Create(Descriptors.MemberResolution, location, handler));
+            return;
+        }
+
+		writer.WriteLine($"{parentVar.Name}.{localName} += {handler};");
+	}
 
 	static bool CanSetValue(IFieldSymbol? bpFieldSymbol, INode node, SourceGenContext context)
     {
