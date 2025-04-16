@@ -26,7 +26,9 @@ static class CodeBehindCodeWriter
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
+#if _MAUIXAML_SG_NULLABLE_ENABLE
 #nullable enable
+#endif
 ";
 	internal static readonly string[] accessModifiers = ["private", "public", "internal", "protected"];
 

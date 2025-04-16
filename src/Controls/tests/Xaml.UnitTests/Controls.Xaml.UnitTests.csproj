@@ -10,7 +10,9 @@
     <IsPackable>false</IsPackable>
     <DisableMSBuildAssemblyCopyCheck>true</DisableMSBuildAssemblyCopyCheck>
     <MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>
-    <DefineConstants>$(DefineConstants);_MAUIXAML_SG_SOURCEINFO</DefineConstants>
+    <DefineConstants>$(DefineConstants);_MAUIXAML_SG_SOURCEINFO;_MAUIXAML_SG_NULLABLE_ENABLE</DefineConstants>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -18,8 +20,6 @@
     <ErrorReport>prompt</ErrorReport>
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
-    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
-    <CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -58,9 +58,7 @@
     <Compile Include="..\Core.UnitTests\MockDeviceDisplay.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <Compile Remove="$(CompilerGeneratedFilesOutputPath)\**\*.cs" />
-  </ItemGroup>
+  <Compile Remove="$(CompilerGeneratedFilesOutputPath)\**\*.cs" />
 
   <Import Project="$(MauiSrcDirectory)Maui.InTree.props" Condition=" '$(UseMaui)' != 'true' " />
 
