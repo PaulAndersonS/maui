@@ -13,11 +13,6 @@ public partial class Maui13474
 {
 	public Maui13474() => InitializeComponent();
 
-	public Maui13474(bool useCompiledXaml)
-	{
-		//this stub will be replaced at compile time
-	}
-
 	class Test
 	{
 		[SetUp]
