@@ -13,52 +13,54 @@ internal class KnownMarkups
 {
 	public static string ProvideValueForStaticExtension(IElementNode markupNode, SourceGenContext context, out ITypeSymbol? returnType)
 	{
-		returnType = null;
-		if (!markupNode.Properties.TryGetValue(new XmlName("", "Member"), out INode ntype))
-				ntype = markupNode.CollectionItems[0];
-			var member = ((ValueNode)ntype).Value as string;
+		returnType = context.Compilation.ObjectType;
+		if (!markupNode.Properties.TryGetValue(new XmlName("", "Member"), out INode ntype)
+			&& !markupNode.Properties.TryGetValue(new XmlName(null, "Member"), out ntype))
+			ntype = markupNode.CollectionItems[0];
+		var member = ((ValueNode)ntype).Value as string;
 
-			if (IsNullOrEmpty(member) || !member!.Contains("."))
-			{
-				//FIXME
-				context.ReportDiagnostic(Diagnostic.Create(Descriptors.XamlParserError, null));
-				return string.Empty;
-			}
+		if (IsNullOrEmpty(member) || !member!.Contains("."))
+		{
+			//FIXME
+			context.ReportDiagnostic(Diagnostic.Create(Descriptors.XamlParserError, null));
+			return string.Empty;
+		}
 
-			var dotIdx = member.LastIndexOf('.');
-			var typename = member.Substring(0, dotIdx);
-			var membername = member.Substring(dotIdx + 1);
+		var dotIdx = member.LastIndexOf('.');
+		var typename = member.Substring(0, dotIdx);
+		var membername = member.Substring(dotIdx + 1);
 
-			var typeSymbol = typename.GetTypeSymbol(context.ReportDiagnostic, context.Compilation, context.XmlnsCache, markupNode);
-			if (typeSymbol == null)
-			{
-				//FIXME
-				context.ReportDiagnostic(Diagnostic.Create(Descriptors.XamlParserError, null, $"Type not found {typename}"));
-				return string.Empty;
-			}
-			var field = typeSymbol.GetAllFields(membername, context).FirstOrDefault(f => f.IsStatic);
-			var property = typeSymbol.GetAllProperties(membername, context).FirstOrDefault(p => p.IsStatic);
+		var typeSymbol = typename.GetTypeSymbol(context.ReportDiagnostic, context.Compilation, context.XmlnsCache, markupNode);
+		if (typeSymbol == null)
+		{
+			//FIXME
+			context.ReportDiagnostic(Diagnostic.Create(Descriptors.XamlParserError, null, $"Type not found {typename}"));
+			return string.Empty;
+		}
+		var field = typeSymbol.GetAllFields(membername, context).FirstOrDefault(f => f.IsStatic);
+		var property = typeSymbol.GetAllProperties(membername, context).FirstOrDefault(p => p.IsStatic);
 
-			//TODO handle enums, or contstants
-			if (field == null && property == null)
-			{
-				//FIXME
-				context.ReportDiagnostic(Diagnostic.Create(Descriptors.XamlParserError, null, "Member not found"));
-				return string.Empty;
-			}
-			if (field != null)
-			{
-				returnType = field.Type;
-				return field.ToFQDisplayString();
-			}
-			if (property != null)
-			{
-				returnType = property.Type;
-				return property.ToFQDisplayString();
-			}
+		//TODO handle enums, or contstants
+		if (field == null && property == null)
+		{
+			//FIXME
+			context.ReportDiagnostic(Diagnostic.Create(Descriptors.XamlParserError, null, "Member not found"));
+			return string.Empty;
+		}
+		if (field != null)
+		{
+			returnType = field.Type;
+			return field.ToFQDisplayString();
+		}
+		if (property != null)
+		{
+			returnType = property.Type;
+			return property.ToFQDisplayString();
+		}
 
-			//Should never happen
-			return "null";
+			
+		//Should never happen
+		return "null";
 	}
 
 	public static string ProvideValueForTypeExtension(IElementNode node, SourceGenContext context, out ITypeSymbol? returnType)

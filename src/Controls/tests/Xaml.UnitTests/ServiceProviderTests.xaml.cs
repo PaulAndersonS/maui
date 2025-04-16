@@ -1,12 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Maui.Controls.Core.UnitTests;
 using Microsoft.Maui.Dispatching;
-using Microsoft.Maui.Graphics;
 using Microsoft.Maui.UnitTests;
 using NUnit.Framework;
-using AbsoluteLayoutFlags = Microsoft.Maui.Layouts.AbsoluteLayoutFlags;
 
 namespace Microsoft.Maui.Controls.Xaml.UnitTests;
 
@@ -48,16 +44,10 @@ public class SPMarkup2 : MarkupExtensionBase { }
 [RequireService([typeof(IXmlLineInfoProvider)])]
 public class SPMarkup3 : MarkupExtensionBase { }
 
-
-
+[XamlProcessing(XamlInflator.Default, true)]
 public partial class ServiceProviderTests : ContentPage
 {
 	public ServiceProviderTests() => InitializeComponent();
-
-	public ServiceProviderTests(bool useCompiledXaml)
-	{
-		//this stub will be replaced at compile time
-	}
 
 	[TestFixture]
 	public class Tests
@@ -65,10 +55,10 @@ public partial class ServiceProviderTests : ContentPage
 		[SetUp] public void Setup() => DispatcherProvider.SetCurrent(new DispatcherProviderStub());
 		[TearDown] public void TearDown() => DispatcherProvider.SetCurrent(null);
 
-		[TestCase(true)]
-		public void TestServiceProviders(bool useCompiledXaml)
+		[Test]
+		public void TestServiceProviders([Values(XamlInflator.XamlC)] XamlInflator inflator)
 		{
-			var page = new ServiceProviderTests(useCompiledXaml);
+			var page = new ServiceProviderTests(inflator);
 			MockCompiler.Compile(typeof(ServiceProviderTests));
 
 			//IValueConverterProvider is builtin for free

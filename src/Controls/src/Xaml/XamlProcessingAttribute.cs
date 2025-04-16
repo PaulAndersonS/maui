@@ -12,7 +12,7 @@ public sealed class XamlProcessingAttribute : Attribute
 		XamlInflator = inflator;
 	}
 
-	internal XamlProcessingAttribute(XamlInflator inflators, bool generateInflatorSwitch) 
+	internal XamlProcessingAttribute(XamlInflator inflators, bool generateInflatorSwitch)
 	{
 		XamlInflator = inflators; //used as a flag to indicate the infators used for unit test purposes
 		GenerateInflatorSwitch = generateInflatorSwitch;

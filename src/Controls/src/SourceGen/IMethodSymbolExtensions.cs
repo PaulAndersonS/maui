@@ -53,8 +53,16 @@ static class IMethodSymbolExtensions
         return true;
     }
 
-	public static IEnumerable<string> ToMethodParameters(this IEnumerable<(INode node, ITypeSymbol type, ITypeSymbol? converter)> parameters, SourceGenContext context)
-	{
+    public static bool MatchParameterAttributes(this IMethodSymbol method, IElementNode enode, SourceGenContext context, out IList<(INode node, ITypeSymbol type, ITypeSymbol? converter)>? parameters, out string? missingparameters)
+    {
+        parameters = null;
+        missingparameters = null;
+
+        return false;
+        
+    }
+    public static IEnumerable<string> ToMethodParameters(this IEnumerable<(INode node, ITypeSymbol type, ITypeSymbol? converter)> parameters, SourceGenContext context)
+    {
         foreach (var p in parameters)
         {
             if (p.node is ValueNode vn)
@@ -67,5 +75,5 @@ static class IMethodSymbolExtensions
             else
                 yield return "null";
         }
-	}
+    }
 }

@@ -106,7 +106,7 @@ static class CodeBehindCodeWriter
 			sb.AppendLine($"\t\t[global::System.CodeDom.Compiler.GeneratedCode(\"Microsoft.Maui.Controls.SourceGen\", \"1.0.0.0\")]");
 			sb.AppendLine($"\t\tpublic {rootType}()");
 			sb.AppendLine("\t\t{");
-			sb.AppendLine("\t\t\tInitializeComponent();");
+			sb.AppendLine(generateInflatorSwitch ? "\t\t\tInitializeComponent(global::Microsoft.Maui.Controls.Xaml.XamlInflator.Default);" : "\t\t\tInitializeComponent();");
 			sb.AppendLine("\t\t}");
 			sb.AppendLine();
 		}
@@ -114,74 +114,122 @@ static class CodeBehindCodeWriter
 		//create fields
 		if (namedFields != null)
 		{
+			//with XamlC, the body of the ctor is empty when the compiler is done, raising warnings. disable those
+			if (!generateInflatorSwitch
+				&& ((xamlInflators & XamlInflator.XamlC) == XamlInflator.XamlC
+					|| (projItem.Configuration != null && projItem.Configuration.Equals("Release", StringComparison.OrdinalIgnoreCase))))
+				sb.AppendLine("#pragma warning disable CS0169, CS0649");
+
 			foreach ((var fname, var ftype, var faccess) in namedFields)
-			{
-				sb.AppendLine($"\t\t[global::System.CodeDom.Compiler.GeneratedCode(\"Microsoft.Maui.Controls.SourceGen\", \"1.0.0.0\")]");
-
-				sb.AppendLine($"\t\t{faccess} {ftype} {EscapeIdentifier(fname)};");
-				sb.AppendLine();
-			}
-		}
-
-		var initCompRuntimeName = "InitializeComponent";
-		if (generateInflatorSwitch)
-			initCompRuntimeName = "InitializeComponentRuntime";
-
-		//initializeComponent
-		sb.AppendLine($"\t\t[global::System.CodeDom.Compiler.GeneratedCode(\"Microsoft.Maui.Controls.SourceGen\", \"1.0.0.0\")]");
-
-		// add MemberNotNull attributes
-		if (namedFields != null && namedFields.Any())
-		{
-			sb.AppendLine($"#if NET5_0_OR_GREATER");
-			foreach ((var fname, _, _) in namedFields)
-			{
-
-				sb.AppendLine($"\t\t[global::System.Diagnostics.CodeAnalysis.MemberNotNullAttribute(nameof({EscapeIdentifier(fname)}))]");
-			}
-
-			sb.AppendLine($"#endif");
-		}
-
-		sb.AppendLine($"\t\tprivate void {initCompRuntimeName}()");
-		sb.AppendLine("\t\t{");
-		sb.AppendLine("#pragma warning disable IL2026, IL3050 // The body of InitializeComponent will be replaced by XamlC so LoadFromXaml will never be called in production builds");
-		sb.AppendLine($"\t\t\tglobal::Microsoft.Maui.Controls.Xaml.Extensions.LoadFromXaml(this, typeof({rootType}));");
-
-		if (namedFields != null)
-		{
-			foreach ((var fname, var ftype, var faccess) in namedFields)
-			{
-				sb.AppendLine($"\t\t\t{EscapeIdentifier(fname)} = global::Microsoft.Maui.Controls.NameScopeExtensions.FindByName<{ftype}>(this, \"{fname}\");");
-			}
-		}
-		sb.AppendLine("#pragma warning restore IL2026, IL3050");
-
-		sb.AppendLine("\t\t}");
-
-		// TODO: only for dogfooding purposes, will be removed when we just use InitializeComponent() for this
-		if (!generateInflatorSwitch)
-		{
-			if ((xamlInflators & XamlInflator.SourceGen) == XamlInflator.SourceGen)
-			{
-				if (!baseType?.InheritsFrom(compilation.GetTypeByMetadataName("Microsoft.Maui.Controls.ResourceDictionary")!, null) ?? false)
 				{
-					if (namedFields is not null)
-					{
-						sb.AppendLine($"#if NET5_0_OR_GREATER");
-						foreach ((var fname, _, _) in namedFields)
-						{
-							sb.AppendLine($"\t\t[global::System.Diagnostics.CodeAnalysis.MemberNotNullAttribute(nameof({EscapeIdentifier(fname)}))]");
-						}
+					sb.AppendLine($"\t\t[global::System.CodeDom.Compiler.GeneratedCode(\"Microsoft.Maui.Controls.SourceGen\", \"1.0.0.0\")]");
 
-						sb.AppendLine($"#endif");
-					}
-					
-					sb.AppendLine($"\t\t[global::System.Runtime.Versioning.RequiresPreviewFeatures(\"Using XAML with source generation is experimental right now. You are required to enable preview features to use it.\")]");
-					sb.AppendLine($"\t\tprivate partial void InitializeComponentSourceGen();");
+					sb.AppendLine($"\t\t{faccess} {ftype} {EscapeIdentifier(fname)};");
 					sb.AppendLine();
 				}
+			if (!generateInflatorSwitch
+				&& ((xamlInflators & XamlInflator.XamlC) == XamlInflator.XamlC
+					|| (projItem.Configuration != null && projItem.Configuration.Equals("Release", StringComparison.OrdinalIgnoreCase))))
+				sb.AppendLine("#pragma warning restore CS0169, CS0649");
+		}
+
+		// if the generateInflatorSwitch is false, we will, depending on the value of inflators
+		// - treat XamlInflator.Default as XamlInflator.Runtime for Debug, and XamlC for Release
+		// - generate InitializeComponent() with the LoadFromXaml call for XamlInflator.Runtime
+		// - generate an empty InitializeComponent for XamlInflator.XamlC (XamlC will replace the methodbody later)
+		// - generate the partial signature for InitializeComponent for XamlInflator.SourceGen
+
+		// if the generateInflatorSwitch is true, we will generate a switch statement in the constructor
+		// that will call the correct InitializeComponent method depending on the inflator passed in
+		// XamlInflatorDefault means all
+		// - InitializeCompnentRuntime will be used for Runtime
+		// - InitializeComponentXamlC will be used for XamlC
+		// - InitializeComponentSourceGen will be used for SourceGen
+		// - no parameterless InitializeComponent will be generated
+		
+		if (!generateInflatorSwitch)
+		{
+			if (xamlInflators == XamlInflator.Default)
+			{
+				if (projItem.Configuration != null && projItem.Configuration.Equals("Release", StringComparison.OrdinalIgnoreCase))
+					InitComp("InitializeComponent", empty: true);
+				else
+					InitComp("InitializeComponent");
 			}
+			if ((xamlInflators & XamlInflator.Runtime) == XamlInflator.Runtime)
+				InitComp("InitializeComponent");
+			else if ((xamlInflators & XamlInflator.XamlC) == XamlInflator.XamlC)
+				InitComp("InitializeComponent", empty: true);
+			else if ((xamlInflators & XamlInflator.SourceGen) == XamlInflator.SourceGen)
+				InitComp("InitializeComponent", partialsignature: true);
+		}
+		else
+		{
+			if ((  xamlInflators & XamlInflator.Runtime) == XamlInflator.Runtime
+				|| xamlInflators == XamlInflator.Default)
+				InitComp("InitializeComponentRuntime");
+			if (( xamlInflators & XamlInflator.XamlC) == XamlInflator.XamlC
+				|| xamlInflators == XamlInflator.Default)
+				InitComp("InitializeComponentXamlC", empty: true);
+			if ((  xamlInflators & XamlInflator.SourceGen) == XamlInflator.SourceGen
+				|| xamlInflators == XamlInflator.Default)
+				InitComp("InitializeComponentSourceGen", partialsignature: true);
+		}
+
+		//initializeComponent
+		void InitComp(string methodName, bool empty = false, bool partialsignature = false )
+		{
+			sb.AppendLine($"\t\t[global::System.CodeDom.Compiler.GeneratedCode(\"Microsoft.Maui.Controls.SourceGen\", \"1.0.0.0\")]");
+			// add MemberNotNull attributes
+			if (namedFields != null && namedFields.Any())
+			{
+				sb.AppendLine($"#if NET5_0_OR_GREATER");
+				foreach ((var fname, _, _) in namedFields)
+				{
+
+					sb.AppendLine($"\t\t[global::System.Diagnostics.CodeAnalysis.MemberNotNullAttribute(nameof({EscapeIdentifier(fname)}))]");
+				}
+
+				sb.AppendLine($"#endif");
+			}
+
+			if (empty)
+				sb.AppendLine("#nullable disable");
+
+			var modifier = partialsignature ? "partial " : "";
+			var semicolon = partialsignature ? ";" : "";
+			sb.AppendLine($"\t\tprivate {modifier}void {methodName}(){semicolon}");
+			if (partialsignature)
+			{
+				sb.AppendLine();
+				return;
+			}
+
+			sb.AppendLine("\t\t{");
+			if (!empty)
+			{
+				sb.AppendLine("#pragma warning disable IL2026, IL3050 // The body of InitializeComponent will be replaced by XamlC so LoadFromXaml will never be called in production builds");
+				sb.AppendLine($"\t\t\tglobal::Microsoft.Maui.Controls.Xaml.Extensions.LoadFromXaml(this, typeof({rootType}));");
+
+				if (namedFields != null)
+				{
+					foreach ((var fname, var ftype, var faccess) in namedFields)
+					{
+						sb.AppendLine($"\t\t\t{EscapeIdentifier(fname)} = global::Microsoft.Maui.Controls.NameScopeExtensions.FindByName<{ftype}>(this, \"{fname}\");");
+					}
+				}
+				sb.AppendLine("#pragma warning restore IL2026, IL3050");
+			}
+			sb.AppendLine("\t\t}");
+
+			if (empty)
+			{
+				sb.AppendLine("#if _MAUIXAML_SG_NULLABLE_ENABLE");
+				sb.AppendLine("#nullable enable");
+				sb.AppendLine("#endif");
+			}
+
+			sb.AppendLine();
 		}
 
 		if (generateInflatorSwitch)
@@ -202,22 +250,6 @@ static class CodeBehindCodeWriter
 			sb.AppendLine($"\t\tprivate void InitializeComponent() => InitializeComponentRuntime();");
 			sb.AppendLine();
 
-			if(xamlInflators == XamlInflator.Default || (xamlInflators & XamlInflator.SourceGen) == XamlInflator.SourceGen)
-			{
-				if (namedFields != null)
-				{
-					sb.AppendLine($"#if NET5_0_OR_GREATER");
-					foreach ((var fname, _, _) in namedFields)
-					{
-						sb.AppendLine($"\t\t[global::System.Diagnostics.CodeAnalysis.MemberNotNullAttribute(nameof({EscapeIdentifier(fname)}))]");
-					}
-
-					sb.AppendLine($"#endif");
-				}
-				sb.AppendLine($"\t\tprivate partial void InitializeComponentSourceGen();");
-				sb.AppendLine();
-			}
-
 			sb.AppendLine($"\t\t[global::System.CodeDom.Compiler.GeneratedCode(\"Microsoft.Maui.Controls.SourceGen\", \"1.0.0.0\")]");
 
 			sb.AppendLine($"\t\tpublic {rootType}(global::Microsoft.Maui.Controls.Xaml.XamlInflator inflator)");
@@ -233,7 +265,7 @@ static class CodeBehindCodeWriter
 			if(xamlInflators == XamlInflator.Default || (xamlInflators & XamlInflator.XamlC) == XamlInflator.XamlC)
 			{
 				sb.AppendLine("\t\t\t\tcase global::Microsoft.Maui.Controls.Xaml.XamlInflator.XamlC:");
-				sb.AppendLine("\t\t\t\t\tInitializeComponent();");
+				sb.AppendLine("\t\t\t\t\tInitializeComponentXamlC();");
 				sb.AppendLine("\t\t\t\t\tbreak;");
 			}
 			if(xamlInflators == XamlInflator.Default || (xamlInflators & XamlInflator.SourceGen) == XamlInflator.SourceGen)

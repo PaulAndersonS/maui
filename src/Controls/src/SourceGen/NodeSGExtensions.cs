@@ -498,6 +498,9 @@ static class NodeSGExtensions
         if (!context.Variables.TryGetValue(node, out var variable))
             return false;
 
+        if (variable.Type is null)
+            return false;
+            
         if (GetKnownLateMarkupExtensions(context).TryGetValue(variable.Type, out var provideValue))
         {
             var value = provideValue.Invoke(node, context, out var returnType0);

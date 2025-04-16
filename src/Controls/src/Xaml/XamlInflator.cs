@@ -8,6 +8,9 @@ namespace Microsoft.Maui.Controls.Xaml
 		Default = 0,
 		Runtime = 1 << 0,
 		XamlC = 1 << 1,
+#if !NETSTANDARD2_0 && !NETSTANDARD2_1
+		[System.Runtime.Versioning.RequiresPreviewFeatures]
+#endif
 		SourceGen = 1 << 2,
 	}
 }

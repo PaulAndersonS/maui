@@ -299,6 +299,11 @@ namespace Microsoft.Maui.Controls.Xaml.UnitTests
 			[Test]
 			public void CreateValueTypes([Values]XamlInflator inflator)
 			{
+				if (inflator == XamlInflator.SourceGen)
+				{
+					var result = MockSourceGenerator.CreateMauiCompilation().RunMauiSourceGenerator(typeof(SetValue));
+					Assert.That(result.Diagnostics, Is.Empty);
+				}
 				var page = new SetValue(inflator);
 				Assert.AreEqual(Colors.Purple, page.Resources["purple"]);
 			}

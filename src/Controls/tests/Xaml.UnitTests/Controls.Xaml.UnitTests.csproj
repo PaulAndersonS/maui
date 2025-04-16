@@ -13,6 +13,7 @@
     <DefineConstants>$(DefineConstants);_MAUIXAML_SG_SOURCEINFO;_MAUIXAML_SG_NULLABLE_ENABLE</DefineConstants>
     <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
     <CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
+    <EnablePreviewFeatures>True</EnablePreviewFeatures>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">

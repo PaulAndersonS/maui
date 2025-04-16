@@ -23,4 +23,5 @@ class ProjectItem
 	
 	//bypass attribute check. used for testing
 	public bool ForceSourceGen { get; internal set; }
+	public string Configuration { get; internal set; } = "Debug";
 }
