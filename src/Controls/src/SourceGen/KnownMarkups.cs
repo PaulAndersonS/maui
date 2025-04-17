@@ -230,15 +230,14 @@ internal class KnownMarkups
 		if (isTemplateBinding)
 		{
 			// TemplateBindingExtension doesn't have all the same properties as BindingExtension
-			return expression + $"{{ DataType = {dataTypeExpression} }}";
+			return expression;
 		}
 		else
 		{
 			return expression +
 				$"{{ UpdateSourceEventName = {extVariable.Name}.UpdateSourceEventName, " +
 				$"FallbackValue = {extVariable.Name}.FallbackValue, " +
-				$"TargetNullValue = {extVariable.Name}.TargetNullValue, " +
-				$"DataType = {dataTypeExpression} }}";
+				$"TargetNullValue = {extVariable.Name}.TargetNullValue }}";
 		}
 
 		static string GetBindingPath(IElementNode node)
