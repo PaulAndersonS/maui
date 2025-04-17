@@ -352,3 +352,5 @@ override Microsoft.Maui.Controls.Handlers.Compatibility.FrameRenderer.MovedToWin
 ~Microsoft.Maui.Controls.Internals.TypedBindingBase.UpdateSourceEventName.set -> void
 Microsoft.Maui.Controls.Xaml.IXamlDataTypeProvider
 Microsoft.Maui.Controls.Xaml.IXamlDataTypeProvider.BindingDataType.get -> string!
+~Microsoft.Maui.Controls.Binding.DataType.get -> System.Type
+~Microsoft.Maui.Controls.Binding.DataType.set -> void

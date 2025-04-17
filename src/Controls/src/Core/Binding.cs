@@ -106,7 +106,7 @@ namespace Microsoft.Maui.Controls
 			}
 		}
 
-		internal Type DataType { get; set; }
+		public Type DataType { get; set; }
 
 		internal override void Apply(bool fromTarget)
 		{
