@@ -23,12 +23,9 @@ Microsoft.Maui.Controls.NavigationType.PopToRoot = 2 -> Microsoft.Maui.Controls.
 Microsoft.Maui.Controls.NavigationType.Push = 0 -> Microsoft.Maui.Controls.NavigationType
 Microsoft.Maui.Controls.NavigationType.Remove = 4 -> Microsoft.Maui.Controls.NavigationType
 Microsoft.Maui.Controls.Internals.TextTransformUtilities
-*REMOVED*Microsoft.Maui.Controls.Internals.TextTransformUtilites
 Microsoft.Maui.Controls.ShadowTypeConverter
 Microsoft.Maui.Controls.ShadowTypeConverter.ShadowTypeConverter() -> void
 Microsoft.Maui.Controls.StyleableElement.Style.get -> Microsoft.Maui.Controls.Style?
-Microsoft.Maui.Controls.VisualElement.IsVisibleCore.get -> bool
-Microsoft.Maui.Controls.VisualElement.RefreshIsVisibleProperty() -> void
 override Microsoft.Maui.Controls.ShadowTypeConverter.CanConvertFrom(System.ComponentModel.ITypeDescriptorContext? context, System.Type? sourceType) -> bool
 override Microsoft.Maui.Controls.ShadowTypeConverter.CanConvertTo(System.ComponentModel.ITypeDescriptorContext? context, System.Type? destinationType) -> bool
 override Microsoft.Maui.Controls.ShadowTypeConverter.ConvertFrom(System.ComponentModel.ITypeDescriptorContext? context, System.Globalization.CultureInfo? culture, object! value) -> object!
@@ -114,6 +111,7 @@ const Microsoft.Maui.Controls.TitleBar.TitleVisibleState = "TitleVisible" -> str
 const Microsoft.Maui.Controls.TitleBar.TrailingHiddenState = "TrailingContentCollapsed" -> string!
 const Microsoft.Maui.Controls.TitleBar.TrailingVisibleState = "TrailingContentVisible" -> string!
 Microsoft.Maui.Controls.HandlerProperties
+*REMOVED*override Microsoft.Maui.Controls.Compatibility.Layout.InvalidateMeasureOverride() -> void
 Microsoft.Maui.Controls.HybridWebView
 Microsoft.Maui.Controls.HybridWebView.DefaultFile.get -> string?
 Microsoft.Maui.Controls.HybridWebView.DefaultFile.set -> void
