@@ -149,43 +149,43 @@ class CreateValuesVisitor : IXamlNodeVisitor
             if (factoryMethod is null)
                 Context.ReportDiagnostic(Diagnostic.Create(Descriptors.MethodResolution, LocationCreate(Context.FilePath!, node, factoryMehodName!), factoryMehodName));
         }
-        
-        //does it has a default parameterless ctor ?
-        ctor ??= type.InstanceConstructors.FirstOrDefault(c => c.Parameters.Length == 0);
 
         if (ctor is null && factoryMethod is null)
         {
+
             //TODO we might need an extension method for that and cache the result. it happens eveytime we have a Style
-            ctor = type.InstanceConstructors.FirstOrDefault(c 
-                => c.Parameters.Length >=0
-                && c.Parameters.All(p => p.GetAttributes().Any(a => a?.AttributeClass?.Equals(Context.Compilation.GetTypeByMetadataName("Microsoft.Maui.Controls.ParameterAttribute")!, SymbolEqualityComparer.Default)?? false))
-                );
-            //TODO validate ctor arguments
+            ctor = type.InstanceConstructors.FirstOrDefault(c
+                => c.Parameters.Length > 0
+                && c.Parameters.All(p =>
+                {
+                    var parameterattribute = p.GetAttributes().FirstOrDefault(a => a.AttributeClass!.Equals(Context.Compilation.GetTypeByMetadataName("Microsoft.Maui.Controls.ParameterAttribute")!, SymbolEqualityComparer.Default));
+                    if (parameterattribute is null)
+                        return false;
+                    var parametername = parameterattribute.ConstructorArguments[0].Value as string;
+                    return node.Properties.ContainsKey(new XmlName("", parametername));
+                }) );
+            
             if (ctor is not null)
             {
                 var variableName = NamingHelpers.CreateUniqueVariableName(Context, type);
                 var paramsTuple = ctor.Parameters
-                    .Select(p => (  p.Type, 
+                    .Select(p => (p.Type,
                                     p.GetAttributes().FirstOrDefault(a => a.AttributeClass!.Equals(Context.Compilation.GetTypeByMetadataName("Microsoft.Maui.Controls.ParameterAttribute")!, SymbolEqualityComparer.Default))?.ConstructorArguments[0].Value as string,
                                     p.GetAttributes().FirstOrDefault(a => a.AttributeClass!.Equals(Context.Compilation.GetTypeByMetadataName("System.ComponentModel.TypeConverterAttribute")!, SymbolEqualityComparer.Default))?.ConstructorArguments[0].Value as ITypeSymbol
                                     ))
                     .Select(p => (p.Type, new XmlName("", p.Item2), node.Properties[new XmlName("", p.Item2)], p.Item3)).ToList();
-                
+
                 parameters = [.. paramsTuple.Select(p => (p.Item3, p.Type, p.Item4))];
-                 
+
                 foreach (var n in paramsTuple.Select(p => p.Item2))
                     if (!node.SkipProperties.Contains(n))
                         node.SkipProperties.Add(n);
-
-                var paramString = string.Join(", ", parameters.ToMethodParameters(Context));
-                Writer.WriteLine($"var {variableName} = new {type.ToFQDisplayString()}({paramString});");
-                Context.Variables[node] = new LocalVariable(type, variableName);
-                node.RegisterSourceInfo(Context, Writer);
-
-                return;
             }
-
         }
+
+        //does it has a default parameterless ctor ?
+        ctor ??= type.InstanceConstructors.FirstOrDefault(c => c.Parameters.Length == 0);
+
 
         bool isColor = type.Equals(Context.Compilation.GetTypeByMetadataName("Microsoft.Maui.Graphics.Color"), SymbolEqualityComparer.Default);
 

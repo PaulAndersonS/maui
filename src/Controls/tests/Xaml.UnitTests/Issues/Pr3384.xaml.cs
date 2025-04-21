@@ -7,7 +7,7 @@ using NUnit.Framework;
 
 namespace Microsoft.Maui.Controls.Xaml.UnitTests;
 
-[XamlProcessing(XamlInflator.Runtime|XamlInflator.XamlC, true)]
+[XamlProcessing(XamlInflator.Default, true)]
 public partial class Pr3384 : ContentPage
 {
 	public Pr3384() => InitializeComponent();
@@ -31,12 +31,6 @@ public partial class Pr3384 : ContentPage
 
 		[Test] public void RecyclingStrategyIsHandled([Values] XamlInflator inflator)
 		{
-			if (inflator == XamlInflator.SourceGen)
-			{ 
-				var result = MockSourceGenerator.CreateMauiCompilation().RunMauiSourceGenerator(typeof(Pr3384));
-				Assert.That(result.Diagnostics.Any());
-			}
-			
 			var p = new Pr3384(inflator);
 			Assert.AreEqual(ListViewCachingStrategy.RecycleElement, p.listView.CachingStrategy);
 		}
