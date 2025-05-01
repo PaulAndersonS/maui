@@ -10,6 +10,12 @@
 *REMOVED*~Microsoft.Maui.Controls.NavigableElement.StyleClass.get -> System.Collections.Generic.IList<string>
 *REMOVED*~Microsoft.Maui.Controls.NavigableElement.StyleClass.set -> void
 *REMOVED*Microsoft.Maui.Controls.DatePicker.Date.get -> System.DateTime
+*REMOVED*override Microsoft.Maui.Controls.ContentPresenter.LayoutChildren(double x, double y, double width, double height) -> void
+*REMOVED*override Microsoft.Maui.Controls.ContentPresenter.OnMeasure(double widthConstraint, double heightConstraint) -> Microsoft.Maui.SizeRequest
+*REMOVED*override Microsoft.Maui.Controls.ScrollView.LayoutChildren(double x, double y, double width, double height) -> void
+*REMOVED*override Microsoft.Maui.Controls.ScrollView.OnMeasure(double widthConstraint, double heightConstraint) -> Microsoft.Maui.SizeRequest
+*REMOVED*override Microsoft.Maui.Controls.TemplatedView.LayoutChildren(double x, double y, double width, double height) -> void
+*REMOVED*override Microsoft.Maui.Controls.TemplatedView.OnMeasure(double widthConstraint, double heightConstraint) -> Microsoft.Maui.SizeRequest
 *REMOVED*Microsoft.Maui.Controls.DateChangedEventArgs.DateChangedEventArgs(System.DateTime oldDate, System.DateTime newDate) -> void
 Microsoft.Maui.Controls.ContentPresenter.CascadeInputTransparent.get -> bool
 Microsoft.Maui.Controls.ContentPresenter.CascadeInputTransparent.set -> void
