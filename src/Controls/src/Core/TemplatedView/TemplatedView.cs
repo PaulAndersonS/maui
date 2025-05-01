@@ -8,9 +8,7 @@ using Microsoft.Maui.Layouts;
 namespace Microsoft.Maui.Controls
 {
 	/// <include file="../../docs/Microsoft.Maui.Controls/TemplatedView.xml" path="Type[@FullName='Microsoft.Maui.Controls.TemplatedView']/Docs/*" />
-#pragma warning disable CS0618 // Type or member is obsolete
-	public partial class TemplatedView : Compatibility.Layout, IControlTemplated, IContentView
-#pragma warning restore CS0618 // Type or member is obsolete
+	public partial class TemplatedView : View, ILayout, ILayoutController, IPaddingElement, IView, IVisualTreeElement, IInputTransparentContainerElement, IControlTemplated, IContentView
 	{
 		/// <summary>Bindable property for <see cref="ControlTemplate"/>.</summary>
 		public static readonly BindableProperty ControlTemplateProperty = BindableProperty.Create(nameof(ControlTemplate), typeof(ControlTemplate), typeof(TemplatedView), null,
@@ -23,44 +21,44 @@ namespace Microsoft.Maui.Controls
 			set { SetValue(ControlTemplateProperty, value); }
 		}
 
-		IList<Element> IControlTemplated.InternalChildren => InternalChildren;
+		/// <summary>
+		/// Gets or sets a value that controls whether child elements
+		/// inherit the input transparency of this layout when the tranparency is <see langword="true"/>.
+		/// </summary>
+		/// <value>
+		/// <see langword="true" /> to cause child elements to inherit the input transparency of this layout,
+		/// when this layout's <see cref="VisualElement.InputTransparent" /> property is <see langword="true" />.
+		/// <see langword="false" /> to cause child elements to ignore the input tranparency of this layout.
+		/// </value>
+		public bool CascadeInputTransparent
+		{
+			get => (bool)GetValue(InputTransparentContainerElement.CascadeInputTransparentProperty);
+			set => SetValue(InputTransparentContainerElement.CascadeInputTransparentProperty, value);
+		}
+
+		[Obsolete("Use SizeChanged.")]
+		public event EventHandler LayoutChanged;
+
+		/// <summary>
+		/// Gets or sets the inner padding of the layout.
+		/// The default value is a <see cref="Thickness"/> with all values set to 0.
+		/// </summary>
+		/// <remarks>The padding is the space between the bounds of a layout and the bounding region into which its children should be arranged into.</remarks>
+		public Thickness Padding
+		{
+			get => (Thickness)GetValue(PaddingElement.PaddingProperty);
+			set => SetValue(PaddingElement.PaddingProperty, value);
+		}
+
+		Thickness IPaddingElement.PaddingDefaultValueCreator() => default(Thickness);
+
+		void IPaddingElement.OnPaddingPropertyChanged(Thickness oldValue, Thickness newValue) => InvalidateMeasure();
+
+		IReadOnlyList<Element> ILayoutController.Children => LogicalChildrenInternal;
+
+		IList<Element> IControlTemplated.InternalChildren => LogicalChildrenInternalBackingStore;
 
 		Element IControlTemplated.TemplateRoot { get; set; }
-
-		[Obsolete("Use InvalidateArrange if you need to trigger a new arrange and then put your arrange logic inside ArrangeOverride instead")]
-		protected override void LayoutChildren(double x, double y, double width, double height)
-		{
-			for (var i = 0; i < LogicalChildrenInternal.Count; i++)
-			{
-				Element element = LogicalChildrenInternal[i];
-				var child = element as View;
-
-				// For now we just leave the old path in place to avoid too much change in behavior
-				// All of our types that inherit from TemplatedView overrides LayoutChildren and replaces
-				// this behavior
-				if (child != null)
-					LayoutChildIntoBoundingRegion(child, new Rect(x, y, width, height));
-			}
-		}
-
-		[Obsolete("Use MeasureOverride instead")]
-		protected override SizeRequest OnMeasure(double widthConstraint, double heightConstraint)
-		{
-			double widthRequest = WidthRequest;
-			double heightRequest = HeightRequest;
-			var childRequest = new SizeRequest();
-
-			if ((widthRequest == -1 || heightRequest == -1) && InternalChildren.Count > 0 && InternalChildren[0] is View view)
-			{
-				childRequest = view.Measure(widthConstraint, heightConstraint, MeasureFlags.IncludeMargins);
-			}
-
-			return new SizeRequest
-			{
-				Request = new Size { Width = widthRequest != -1 ? widthRequest : childRequest.Request.Width, Height = heightRequest != -1 ? heightRequest : childRequest.Request.Height },
-				Minimum = childRequest.Minimum
-			};
-		}
 
 		internal override void ComputeConstraintForView(View view)
 		{
@@ -150,7 +148,9 @@ namespace Microsoft.Maui.Controls
 			return bounds.Size;
 		}
 
-#nullable disable
+		Size IContentView.CrossPlatformMeasure(double widthConstraint, double heightConstraint) => ((ICrossPlatformLayout)this).CrossPlatformMeasure(widthConstraint, heightConstraint);
 
+		Size IContentView.CrossPlatformArrange(Rect bounds) =>
+			((ICrossPlatformLayout)this).CrossPlatformArrange(bounds);
 	}
 }
