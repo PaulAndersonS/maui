@@ -1,35 +1,31 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using Microsoft.Maui.Controls.Internals;
 using Microsoft.Maui.Graphics;
 using Microsoft.Maui.Layouts;
 
 namespace Microsoft.Maui.Controls
 {
-	/// <include file="../../docs/Microsoft.Maui.Controls/TemplatedView.xml" path="Type[@FullName='Microsoft.Maui.Controls.TemplatedView']/Docs/*" />
+	/// <summary>
+	/// A view that displays content with a control template, and the base class for <see cref="ContentView" />.
+	/// </summary>
 	public partial class TemplatedView : View, ILayout, ILayoutController, IPaddingElement, IView, IVisualTreeElement, IInputTransparentContainerElement, IControlTemplated, IContentView
 	{
 		/// <summary>Bindable property for <see cref="ControlTemplate"/>.</summary>
 		public static readonly BindableProperty ControlTemplateProperty = BindableProperty.Create(nameof(ControlTemplate), typeof(ControlTemplate), typeof(TemplatedView), null,
 			propertyChanged: TemplateUtilities.OnControlTemplateChanged);
 
-		/// <include file="../../docs/Microsoft.Maui.Controls/TemplatedView.xml" path="//Member[@MemberName='ControlTemplate']/Docs/*" />
+		/// <summary>
+		/// Gets or sets the control template that is used to display content.
+		/// This is a bindable property.
+		/// </summary>
 		public ControlTemplate ControlTemplate
 		{
 			get { return (ControlTemplate)GetValue(ControlTemplateProperty); }
 			set { SetValue(ControlTemplateProperty, value); }
 		}
 
-		/// <summary>
-		/// Gets or sets a value that controls whether child elements
-		/// inherit the input transparency of this layout when the tranparency is <see langword="true"/>.
-		/// </summary>
-		/// <value>
-		/// <see langword="true" /> to cause child elements to inherit the input transparency of this layout,
-		/// when this layout's <see cref="VisualElement.InputTransparent" /> property is <see langword="true" />.
-		/// <see langword="false" /> to cause child elements to ignore the input tranparency of this layout.
-		/// </value>
+		/// <inheritdoc cref="IInputTransparentContainerElement.CascadeInputTransparent"/>
 		public bool CascadeInputTransparent
 		{
 			get => (bool)GetValue(InputTransparentContainerElement.CascadeInputTransparentProperty);
@@ -39,11 +35,7 @@ namespace Microsoft.Maui.Controls
 		[Obsolete("Use SizeChanged.")]
 		public event EventHandler LayoutChanged;
 
-		/// <summary>
-		/// Gets or sets the inner padding of the layout.
-		/// The default value is a <see cref="Thickness"/> with all values set to 0.
-		/// </summary>
-		/// <remarks>The padding is the space between the bounds of a layout and the bounding region into which its children should be arranged into.</remarks>
+		/// <inheritdoc cref="IPaddingElement.Padding"/>
 		public Thickness Padding
 		{
 			get => (Thickness)GetValue(PaddingElement.PaddingProperty);
@@ -67,16 +59,24 @@ namespace Microsoft.Maui.Controls
 
 			var result = LayoutConstraint.None;
 			if (isFixedVertically && view.VerticalOptions.Alignment == LayoutAlignment.Fill)
+			{
 				result |= LayoutConstraint.VerticallyFixed;
+			}
+
 			if (isFixedHorizontally && view.HorizontalOptions.Alignment == LayoutAlignment.Fill)
+			{
 				result |= LayoutConstraint.HorizontallyFixed;
+			}
+
 			view.ComputedConstraint = result;
 		}
 
 		internal override void SetChildInheritedBindingContext(Element child, object context)
 		{
-			if (ControlTemplate == null)
+			if (ControlTemplate is null)
+			{
 				base.SetChildInheritedBindingContext(child, context);
+			}
 		}
 
 		void IControlTemplated.OnControlTemplateChanged(ControlTemplate oldValue, ControlTemplate newValue)
@@ -108,7 +108,10 @@ namespace Microsoft.Maui.Controls
 
 		protected object GetTemplateChild(string name) => TemplateUtilities.GetTemplateChild(this, name);
 
-		/// <include file="../../docs/Microsoft.Maui.Controls/TemplatedView.xml" path="//Member[@MemberName='ResolveControlTemplate']/Docs/*" />
+		/// <summary>
+		/// Resolves and returns the <see cref="ControlTemplate"/> associated with this instance.
+		/// </summary>
+		/// <returns>The <see cref="ControlTemplate"/> currently assigned to this instance. If no template is assigned, this method returns <see langword="null"/>.</returns>
 		public virtual ControlTemplate ResolveControlTemplate()
 		{
 			return ControlTemplate;

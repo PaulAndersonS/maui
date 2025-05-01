@@ -11,6 +11,11 @@
 *REMOVED*~Microsoft.Maui.Controls.NavigableElement.StyleClass.set -> void
 *REMOVED*Microsoft.Maui.Controls.DatePicker.Date.get -> System.DateTime
 *REMOVED*Microsoft.Maui.Controls.DateChangedEventArgs.DateChangedEventArgs(System.DateTime oldDate, System.DateTime newDate) -> void
+Microsoft.Maui.Controls.ContentPresenter.CascadeInputTransparent.get -> bool
+Microsoft.Maui.Controls.ContentPresenter.CascadeInputTransparent.set -> void
+Microsoft.Maui.Controls.ContentPresenter.LayoutChanged -> System.EventHandler
+Microsoft.Maui.Controls.ContentPresenter.Padding.get -> Microsoft.Maui.Thickness
+Microsoft.Maui.Controls.ContentPresenter.Padding.set -> void
 Microsoft.Maui.Controls.DateChangedEventArgs.DateChangedEventArgs(System.DateTime? oldDate, System.DateTime? newDate) -> void
 *REMOVED*Microsoft.Maui.Controls.DateChangedEventArgs.NewDate.get -> System.DateTime
 Microsoft.Maui.Controls.DateChangedEventArgs.NewDate.get -> System.DateTime?
@@ -34,6 +39,16 @@ Microsoft.Maui.Controls.ITextAlignmentElement.HorizontalTextAlignment.get -> Mic
 Microsoft.Maui.Controls.ITextAlignmentElement.OnHorizontalTextAlignmentPropertyChanged(Microsoft.Maui.TextAlignment oldValue, Microsoft.Maui.TextAlignment newValue) -> void
 Microsoft.Maui.Controls.ITextAlignmentElement.VerticalTextAlignment.get -> Microsoft.Maui.TextAlignment
 Microsoft.Maui.Controls.ITextElement
+Microsoft.Maui.Controls.ScrollView.CascadeInputTransparent.get -> bool
+Microsoft.Maui.Controls.ScrollView.CascadeInputTransparent.set -> void
+Microsoft.Maui.Controls.ScrollView.LayoutChanged -> System.EventHandler
+Microsoft.Maui.Controls.ScrollView.Padding.get -> Microsoft.Maui.Thickness
+Microsoft.Maui.Controls.ScrollView.Padding.set -> void
+Microsoft.Maui.Controls.TemplatedView.CascadeInputTransparent.get -> bool
+Microsoft.Maui.Controls.TemplatedView.CascadeInputTransparent.set -> void
+Microsoft.Maui.Controls.TemplatedView.LayoutChanged -> System.EventHandler
+Microsoft.Maui.Controls.TemplatedView.Padding.get -> Microsoft.Maui.Thickness
+Microsoft.Maui.Controls.TemplatedView.Padding.set -> void
 ~Microsoft.Maui.Controls.ITextElement.OnTextColorPropertyChanged(Microsoft.Maui.Graphics.Color oldValue, Microsoft.Maui.Graphics.Color newValue) -> void
 ~Microsoft.Maui.Controls.ITextElement.TextColor.get -> Microsoft.Maui.Graphics.Color
 ~Microsoft.Maui.Controls.ITextElement.UpdateFormsText(string original, Microsoft.Maui.TextTransform transform) -> string

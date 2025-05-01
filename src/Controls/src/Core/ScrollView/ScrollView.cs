@@ -28,7 +28,7 @@ namespace Microsoft.Maui.Controls
 					return;
 				_layoutAreaOverride = value;
 				// Dont invalidate here, we can relayout immediately since this only impacts our innards
-				UpdateChildrenLayout();
+				InvalidateMeasure();
 			}
 		}
 
@@ -152,13 +152,13 @@ namespace Microsoft.Maui.Controls
 					return;
 
 				OnPropertyChanging();
-				if (_content != null)
+				if (_content is not null)
 				{
 					_content.SizeChanged -= ContentSizeChanged;
 					RemoveLogicalChild(_content);
 				}
 				_content = value;
-				if (_content != null)
+				if (_content is not null)
 				{
 					AddLogicalChild(_content);
 					_content.SizeChanged += ContentSizeChanged;
@@ -169,15 +169,7 @@ namespace Microsoft.Maui.Controls
 			}
 		}
 
-		/// <summary>
-		/// Gets or sets a value that controls whether child elements
-		/// inherit the input transparency of this layout when the tranparency is <see langword="true"/>.
-		/// </summary>
-		/// <value>
-		/// <see langword="true" /> to cause child elements to inherit the input transparency of this layout,
-		/// when this layout's <see cref="VisualElement.InputTransparent" /> property is <see langword="true" />.
-		/// <see langword="false" /> to cause child elements to ignore the input tranparency of this layout.
-		/// </value>
+		/// <inheritdoc cref="IInputTransparentContainerElement.CascadeInputTransparent"/>
 		public bool CascadeInputTransparent
 		{
 			get => (bool)GetValue(InputTransparentContainerElement.CascadeInputTransparentProperty);
@@ -187,11 +179,7 @@ namespace Microsoft.Maui.Controls
 		[Obsolete("Use SizeChanged.")]
 		public event EventHandler LayoutChanged;
 
-		/// <summary>
-		/// Gets or sets the inner padding of the layout.
-		/// The default value is a <see cref="Thickness"/> with all values set to 0.
-		/// </summary>
-		/// <remarks>The padding is the space between the bounds of a layout and the bounding region into which its children should be arranged into.</remarks>
+		/// <inheritdoc cref="IPaddingElement.Padding"/>
 		public Thickness Padding
 		{
 			get => (Thickness)GetValue(PaddingElement.PaddingProperty);
@@ -205,7 +193,7 @@ namespace Microsoft.Maui.Controls
 		void ContentSizeChanged(object sender, EventArgs e)
 		{
 			var view = (sender as IView);
-			if (view == null)
+			if (view is null)
 			{
 				ContentSize = Size.Zero;
 				return;
@@ -279,7 +267,9 @@ namespace Microsoft.Maui.Controls
 		public Task ScrollToAsync(double x, double y, bool animated)
 		{
 			if (Orientation == ScrollOrientation.Neither)
+			{
 				return Task.FromResult(false);
+			}
 
 			var args = new ScrollToRequestedEventArgs(x, y, animated);
 			OnScrollToRequested(args);
@@ -290,16 +280,24 @@ namespace Microsoft.Maui.Controls
 		public Task ScrollToAsync(Element element, ScrollToPosition position, bool animated)
 		{
 			if (Orientation == ScrollOrientation.Neither)
+			{
 				return Task.FromResult(false);
+			}
 
 			if (!Enum.IsDefined(typeof(ScrollToPosition), position))
+			{
 				throw new ArgumentException("position is not a valid ScrollToPosition", nameof(position));
+			}
 
-			if (element == null)
+			if (element is null)
+			{
 				throw new ArgumentNullException(nameof(element));
+			}
 
 			if (!CheckElementBelongsToScrollViewer(element))
+			{
 				throw new ArgumentException("element does not belong to this ScrollView", nameof(element));
+			}
 
 			var args = new ScrollToRequestedEventArgs(element, position, animated);
 			OnScrollToRequested(args);
@@ -334,12 +332,12 @@ namespace Microsoft.Maui.Controls
 
 		bool CheckElementBelongsToScrollViewer(Element element)
 		{
-			return Equals(element, this) || element.RealParent != null && CheckElementBelongsToScrollViewer(element.RealParent);
+			return Equals(element, this) || element.RealParent is not null && CheckElementBelongsToScrollViewer(element.RealParent);
 		}
 
 		void CheckTaskCompletionSource()
 		{
-			if (_scrollCompletionSource != null && _scrollCompletionSource.Task.Status == TaskStatus.Running)
+			if (_scrollCompletionSource is not null && _scrollCompletionSource.Task.Status == TaskStatus.Running)
 			{
 				_scrollCompletionSource.TrySetCanceled();
 			}
@@ -349,10 +347,13 @@ namespace Microsoft.Maui.Controls
 		double GetCoordinate(Element item, string coordinateName, double coordinate)
 		{
 			if (item == this)
+			{
 				return coordinate;
+			}
+
 			coordinate += (double)typeof(VisualElement).GetProperty(coordinateName).GetValue(item, null);
 			var visualParentElement = item.RealParent as VisualElement;
-			return visualParentElement != null ? GetCoordinate(visualParentElement, coordinateName, coordinate) : coordinate;
+			return visualParentElement is not null ? GetCoordinate(visualParentElement, coordinateName, coordinate) : coordinate;
 		}
 
 		void OnScrollToRequested(ScrollToRequestedEventArgs e)
@@ -361,9 +362,13 @@ namespace Microsoft.Maui.Controls
 			ScrollToRequested?.Invoke(this, e);
 
 			if (Handler is null)
+			{
 				_pendingScrollToRequested = e;
+			}
 			else
+			{
 				Handler.Invoke(nameof(IScrollView.RequestScrollTo), ConvertRequestMode(e).ToRequest());
+			}
 		}
 
 		ScrollToRequestedEventArgs ConvertRequestMode(ScrollToRequestedEventArgs args)
@@ -379,6 +384,7 @@ namespace Microsoft.Maui.Controls
 		}
 
 		object IContentView.Content => Content;
+
 		IView IContentView.PresentedContent => Content;
 
 		double IScrollView.HorizontalOffset

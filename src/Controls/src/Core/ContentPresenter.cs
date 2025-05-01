@@ -1,14 +1,14 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using Microsoft.Maui.Controls.Internals;
 using Microsoft.Maui.Graphics;
 using Microsoft.Maui.Layouts;
 
 namespace Microsoft.Maui.Controls
 {
-	/// <include file="../../docs/Microsoft.Maui.Controls/ContentPresenter.xml" path="Type[@FullName='Microsoft.Maui.Controls.ContentPresenter']/Docs/*" />
+	/// <summary>
+	/// Layout manager for templated views.
+	/// </summary>
 	public class ContentPresenter : View, ILayout, ILayoutController, IPaddingElement, IView, IVisualTreeElement, IInputTransparentContainerElement, IContentView
 	{
 		/// <include file="../../docs/Microsoft.Maui.Controls/ContentPresenter.xml" path="//Member[@MemberName='ContentProperty']/Docs/*" />
@@ -18,7 +18,9 @@ namespace Microsoft.Maui.Controls
 		[Obsolete("Use SizeChanged.")]
 		public event EventHandler LayoutChanged;
 
-		/// <include file="../../docs/Microsoft.Maui.Controls/ContentPresenter.xml" path="//Member[@MemberName='.ctor']/Docs/*" />
+		/// <summary>
+		/// Creates a new empty <see cref="ContentPresenter"/> with default values.
+		/// </summary>
 		public ContentPresenter()
 		{
 			this.SetBinding(
@@ -29,22 +31,16 @@ namespace Microsoft.Maui.Controls
 				converterParameter: this);
 		}
 
-		/// <summary>
-		/// Gets or sets a value that controls whether child elements
-		/// inherit the input transparency of this layout when the tranparency is <see langword="true"/>.
-		/// </summary>
-		/// <value>
-		/// <see langword="true" /> to cause child elements to inherit the input transparency of this layout,
-		/// when this layout's <see cref="VisualElement.InputTransparent" /> property is <see langword="true" />.
-		/// <see langword="false" /> to cause child elements to ignore the input tranparency of this layout.
-		/// </value>
+		/// <inheritdoc cref="IInputTransparentContainerElement.CascadeInputTransparent"/>
 		public bool CascadeInputTransparent
 		{
 			get => (bool)GetValue(InputTransparentContainerElement.CascadeInputTransparentProperty);
 			set => SetValue(InputTransparentContainerElement.CascadeInputTransparentProperty, value);
 		}
 
-		/// <include file="../../docs/Microsoft.Maui.Controls/ContentPresenter.xml" path="//Member[@MemberName='Content']/Docs/*" />
+		/// <summary>
+		/// Gets or sets the view whose layout is managed by this <see cref="ContentPresenter"/>.
+		/// </summary>
 		public View Content
 		{
 			get { return (View)GetValue(ContentProperty); }
@@ -52,15 +48,12 @@ namespace Microsoft.Maui.Controls
 		}
 
 		object IContentView.Content => Content;
+
 		IView IContentView.PresentedContent => Content;
 
 		IReadOnlyList<Element> ILayoutController.Children => LogicalChildrenInternal;
 
-		/// <summary>
-		/// Gets or sets the inner padding of the layout.
-		/// The default value is a <see cref="Thickness"/> with all values set to 0.
-		/// </summary>
-		/// <remarks>The padding is the space between the bounds of a layout and the bounding region into which its children should be arranged into.</remarks>
+		/// <inheritdoc cref="IPaddingElement.Padding"/>
 		public Thickness Padding
 		{
 			get => (Thickness)GetValue(PaddingElement.PaddingProperty);
@@ -83,9 +76,15 @@ namespace Microsoft.Maui.Controls
 
 			var result = LayoutConstraint.None;
 			if (isFixedVertically && view.VerticalOptions.Alignment == LayoutAlignment.Fill)
+			{
 				result |= LayoutConstraint.VerticallyFixed;
+			}
+
 			if (isFixedHorizontally && view.HorizontalOptions.Alignment == LayoutAlignment.Fill)
+			{
 				result |= LayoutConstraint.HorizontallyFixed;
+			}
+
 			view.ComputedConstraint = result;
 		}
 
@@ -100,13 +99,13 @@ namespace Microsoft.Maui.Controls
 
 			var oldView = (View)oldValue;
 			var newView = (View)newValue;
-			if (oldView != null)
+			if (oldView is not null)
 			{
 				self.RemoveLogicalChild(oldView);
 				oldView.ParentOverride = null;
 			}
 
-			if (newView != null)
+			if (newView is not null)
 			{
 				self.AddLogicalChild(newView);
 				newView.ParentOverride = await TemplateUtilities.FindTemplatedParentAsync((Element)bindable);
