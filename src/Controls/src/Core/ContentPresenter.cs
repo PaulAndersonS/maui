@@ -11,12 +11,14 @@ namespace Microsoft.Maui.Controls
 	/// </summary>
 	public class ContentPresenter : View, ILayout, ILayoutController, IPaddingElement, IView, IVisualTreeElement, IInputTransparentContainerElement, IContentView
 	{
-		/// <include file="../../docs/Microsoft.Maui.Controls/ContentPresenter.xml" path="//Member[@MemberName='ContentProperty']/Docs/*" />
+		/// <summary>Bindable property for <see cref="Content"/>.</summary>
 		public static BindableProperty ContentProperty = BindableProperty.Create(nameof(Content), typeof(View),
 			typeof(ContentPresenter), null, propertyChanged: OnContentChanged);
 
+#pragma warning disable CS0067
 		[Obsolete("Use SizeChanged.")]
 		public event EventHandler LayoutChanged;
+#pragma warning restore CS0067
 
 		/// <summary>
 		/// Creates a new empty <see cref="ContentPresenter"/> with default values.

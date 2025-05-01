@@ -32,8 +32,14 @@ Microsoft.Maui.Controls.DatePicker.Date.get -> System.DateTime?
 *REMOVED*Microsoft.Maui.Controls.DatePicker.MinimumDate.get -> System.DateTime
 Microsoft.Maui.Controls.DatePicker.MaximumDate.get -> System.DateTime?
 Microsoft.Maui.Controls.DatePicker.MinimumDate.get -> System.DateTime?
+Microsoft.Maui.Controls.Frame.IsClippedToBounds.get -> bool
+Microsoft.Maui.Controls.Frame.IsClippedToBounds.set -> void
 Microsoft.Maui.Controls.HybridWebView.InvokeJavaScriptAsync(string! methodName, object?[]? paramValues = null, System.Text.Json.Serialization.Metadata.JsonTypeInfo?[]? paramJsonTypeInfos = null) -> System.Threading.Tasks.Task!
 Microsoft.Maui.Controls.HybridWebView.SetInvokeJavaScriptTarget<T>(T! target) -> void
+Microsoft.Maui.Controls.IClippedToBoundsElement
+Microsoft.Maui.Controls.IClippedToBoundsElement.IsClippedToBounds.get -> bool
+Microsoft.Maui.Controls.IClippedToBoundsElement.IsClippedToBounds.set -> void
+Microsoft.Maui.Controls.IClippedToBoundsElement.IsClippedToBoundsPropertyChanged(Microsoft.Maui.Controls.BindableObject! bindableObject, object! oldValue, object! newValue) -> void
 Microsoft.Maui.Controls.ICornerElement
 Microsoft.Maui.Controls.ICornerElement.CornerRadius.get -> Microsoft.Maui.CornerRadius
 Microsoft.Maui.Controls.ILineHeightElement
@@ -50,6 +56,8 @@ Microsoft.Maui.Controls.ITextElement.OnCharacterSpacingPropertyChanged(double ol
 Microsoft.Maui.Controls.ITextElement.OnTextTransformChanged(Microsoft.Maui.TextTransform oldValue, Microsoft.Maui.TextTransform newValue) -> void
 Microsoft.Maui.Controls.ITextElement.TextTransform.get -> Microsoft.Maui.TextTransform
 Microsoft.Maui.Controls.ITextElement.TextTransform.set -> void
+Microsoft.Maui.Controls.RefreshView.IsClippedToBounds.get -> bool
+Microsoft.Maui.Controls.RefreshView.IsClippedToBounds.set -> void
 Microsoft.Maui.Controls.ScrollView.CascadeInputTransparent.get -> bool
 Microsoft.Maui.Controls.ScrollView.CascadeInputTransparent.set -> void
 Microsoft.Maui.Controls.ScrollView.LayoutChanged -> System.EventHandler
@@ -222,6 +230,8 @@ static readonly Microsoft.Maui.Controls.TitleBar.TitleProperty -> Microsoft.Maui
 static readonly Microsoft.Maui.Controls.TitleBar.TrailingContentProperty -> Microsoft.Maui.Controls.BindableProperty!
 static readonly Microsoft.Maui.Controls.Window.TitleBarProperty -> Microsoft.Maui.Controls.BindableProperty!
 virtual Microsoft.Maui.Controls.Application.ActivateWindow(Microsoft.Maui.Controls.Window! window) -> void
+~static readonly Microsoft.Maui.Controls.Frame.IsClippedToBoundsProperty -> Microsoft.Maui.Controls.BindableProperty
+~static readonly Microsoft.Maui.Controls.RefreshView.IsClippedToBoundsProperty -> Microsoft.Maui.Controls.BindableProperty
 ~static readonly Microsoft.Maui.Controls.Switch.OffColorProperty -> Microsoft.Maui.Controls.BindableProperty
 ~Microsoft.Maui.Controls.Switch.OffColor.get -> Microsoft.Maui.Graphics.Color
 ~Microsoft.Maui.Controls.Switch.OffColor.set -> void

@@ -4,6 +4,14 @@ Microsoft.Maui.Controls.ContentPresenter.CascadeInputTransparent.set -> void
 Microsoft.Maui.Controls.ContentPresenter.LayoutChanged -> System.EventHandler
 Microsoft.Maui.Controls.ContentPresenter.Padding.get -> Microsoft.Maui.Thickness
 Microsoft.Maui.Controls.ContentPresenter.Padding.set -> void
+Microsoft.Maui.Controls.Frame.IsClippedToBounds.get -> bool
+Microsoft.Maui.Controls.Frame.IsClippedToBounds.set -> void
+Microsoft.Maui.Controls.IClippedToBoundsElement
+Microsoft.Maui.Controls.IClippedToBoundsElement.IsClippedToBounds.get -> bool
+Microsoft.Maui.Controls.IClippedToBoundsElement.IsClippedToBounds.set -> void
+Microsoft.Maui.Controls.IClippedToBoundsElement.IsClippedToBoundsPropertyChanged(Microsoft.Maui.Controls.BindableObject! bindableObject, object! oldValue, object! newValue) -> void
+Microsoft.Maui.Controls.RefreshView.IsClippedToBounds.get -> bool
+Microsoft.Maui.Controls.RefreshView.IsClippedToBounds.set -> void
 Microsoft.Maui.Controls.ScrollView.CascadeInputTransparent.get -> bool
 Microsoft.Maui.Controls.ScrollView.CascadeInputTransparent.set -> void
 Microsoft.Maui.Controls.ScrollView.LayoutChanged -> System.EventHandler
@@ -252,6 +260,8 @@ Microsoft.Maui.Controls.ITextElement.TextTransform.set -> void
 *REMOVED*~static Microsoft.Maui.Controls.WebView.ControlsWebViewMapper -> Microsoft.Maui.IPropertyMapper<Microsoft.Maui.IWebView, Microsoft.Maui.Handlers.WebViewHandler>
 *REMOVED*~static Microsoft.Maui.Controls.Window.ControlsWindowMapper -> Microsoft.Maui.IPropertyMapper<Microsoft.Maui.IWindow, Microsoft.Maui.Handlers.WindowHandler>
 ~static readonly Microsoft.Maui.Controls.BaseShellItem.FlyoutItemIsVisibleProperty -> Microsoft.Maui.Controls.BindableProperty
+~static readonly Microsoft.Maui.Controls.Frame.IsClippedToBoundsProperty -> Microsoft.Maui.Controls.BindableProperty
+~static readonly Microsoft.Maui.Controls.RefreshView.IsClippedToBoundsProperty -> Microsoft.Maui.Controls.BindableProperty
 ~virtual Microsoft.Maui.Controls.Handlers.Items2.ItemsViewController2<TItemsView>.CreateDelegator() -> UIKit.UICollectionViewDelegateFlowLayout
 ~virtual Microsoft.Maui.Controls.Handlers.Items2.ItemsViewController2<TItemsView>.CreateItemsViewSource() -> Microsoft.Maui.Controls.Handlers.Items.IItemsViewSource
 ~virtual Microsoft.Maui.Controls.Handlers.Items2.ItemsViewController2<TItemsView>.DetermineCellReuseId(Foundation.NSIndexPath indexPath) -> string
