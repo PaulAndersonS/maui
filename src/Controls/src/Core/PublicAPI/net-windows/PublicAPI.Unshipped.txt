@@ -39,7 +39,6 @@ Microsoft.Maui.Controls.HybridWebView.SetInvokeJavaScriptTarget<T>(T! target) ->
 Microsoft.Maui.Controls.IClippedToBoundsElement
 Microsoft.Maui.Controls.IClippedToBoundsElement.IsClippedToBounds.get -> bool
 Microsoft.Maui.Controls.IClippedToBoundsElement.IsClippedToBounds.set -> void
-Microsoft.Maui.Controls.IClippedToBoundsElement.IsClippedToBoundsPropertyChanged(Microsoft.Maui.Controls.BindableObject! bindableObject, object! oldValue, object! newValue) -> void
 Microsoft.Maui.Controls.ICornerElement
 Microsoft.Maui.Controls.ICornerElement.CornerRadius.get -> Microsoft.Maui.CornerRadius
 Microsoft.Maui.Controls.ILineHeightElement

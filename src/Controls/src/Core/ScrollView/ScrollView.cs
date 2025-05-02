@@ -176,8 +176,10 @@ namespace Microsoft.Maui.Controls
 			set => SetValue(InputTransparentContainerElement.CascadeInputTransparentProperty, value);
 		}
 
+#pragma warning disable CS0067
 		[Obsolete("Use SizeChanged.")]
 		public event EventHandler LayoutChanged;
+#pragma warning restore CS0067
 
 		/// <inheritdoc cref="IPaddingElement.Padding"/>
 		public Thickness Padding
