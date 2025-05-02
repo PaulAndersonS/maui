@@ -1,6 +1,8 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using Microsoft.Maui.Graphics;
 using Microsoft.Maui.Layouts;
 
@@ -11,6 +13,11 @@ namespace Microsoft.Maui.Controls
 	/// </summary>
 	public partial class TemplatedView : View, ILayout, ILayoutController, IPaddingElement, IView, IVisualTreeElement, IInputTransparentContainerElement, IControlTemplated, IContentView
 	{
+		/// <summary>The children contained in this layout.</summary>
+		/// <remarks>For internal use only. This API can be changed or removed without notice at any time.</remarks>
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		public IReadOnlyList<Element> Children => LogicalChildrenInternal;
+
 		/// <summary>Bindable property for <see cref="ControlTemplate"/>.</summary>
 		public static readonly BindableProperty ControlTemplateProperty = BindableProperty.Create(nameof(ControlTemplate), typeof(ControlTemplate), typeof(TemplatedView), null,
 			propertyChanged: TemplateUtilities.OnControlTemplateChanged);
