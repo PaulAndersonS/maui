@@ -7,6 +7,4 @@ public interface IClippedToBoundsElement
 	/// The default value is <see langword="false"/>.
 	/// </summary>
 	bool IsClippedToBounds { get; set; }
-
-	void IsClippedToBoundsPropertyChanged(BindableObject bindableObject, object oldValue, object newValue);
 }

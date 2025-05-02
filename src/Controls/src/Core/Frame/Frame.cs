@@ -32,10 +32,7 @@ namespace Microsoft.Maui.Controls
 			_platformConfigurationRegistry = new Lazy<PlatformConfigurationRegistry<Frame>>(() => new PlatformConfigurationRegistry<Frame>(this));
 		}
 
-		Thickness IPaddingElement.PaddingDefaultValueCreator()
-		{
-			return 20d;
-		}
+		Thickness IPaddingElement.PaddingDefaultValueCreator() => 20d;
 		
 		/// <inheritdoc cref="IClippedToBoundsElement.IsClippedToBounds"/>
 		public bool IsClippedToBounds

@@ -44,7 +44,7 @@ namespace Microsoft.Maui.Controls
 			set => SetValue(PaddingElement.PaddingProperty, value);
 		}
 
-		Thickness IPaddingElement.PaddingDefaultValueCreator() => default(Thickness);
+		Thickness IPaddingElement.PaddingDefaultValueCreator() => default;
 
 		void IPaddingElement.OnPaddingPropertyChanged(Thickness oldValue, Thickness newValue) => InvalidateMeasure();
 
