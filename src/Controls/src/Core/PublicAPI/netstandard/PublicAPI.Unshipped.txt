@@ -60,8 +60,6 @@ override Microsoft.Maui.Controls.ShadowTypeConverter.ConvertTo(System.ComponentM
 ~Microsoft.Maui.Controls.NavigatedFromEventArgs.DestinationPage.get -> Microsoft.Maui.Controls.Page
 ~Microsoft.Maui.Controls.NavigatedToEventArgs.PreviousPage.get -> Microsoft.Maui.Controls.Page
 ~Microsoft.Maui.Controls.NavigatingFromEventArgs.DestinationPage.get -> Microsoft.Maui.Controls.Page
-*REMOVED*~static Microsoft.Maui.Controls.Internals.TextTransformUtilites.GetTransformedText(string source, Microsoft.Maui.TextTransform textTransform) -> string
-*REMOVED*~static Microsoft.Maui.Controls.Internals.TextTransformUtilites.SetPlainText(Microsoft.Maui.Controls.InputView inputView, string platformText) -> void
 ~Microsoft.Maui.Controls.ITextElement.OnTextColorPropertyChanged(Microsoft.Maui.Graphics.Color oldValue, Microsoft.Maui.Graphics.Color newValue) -> void
 ~Microsoft.Maui.Controls.ITextElement.TextColor.get -> Microsoft.Maui.Graphics.Color
 ~Microsoft.Maui.Controls.ITextElement.UpdateFormsText(string original, Microsoft.Maui.TextTransform transform) -> string
