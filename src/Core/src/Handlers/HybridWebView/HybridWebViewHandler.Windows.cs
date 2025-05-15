@@ -20,7 +20,9 @@ namespace Microsoft.Maui.Handlers
 
 		protected override WebView2 CreatePlatformView()
 		{
-			return new MauiHybridWebView(this);
+			var webView = new MauiHybridWebView(this);
+
+			return webView;
 		}
 
 		protected override void ConnectHandler(WebView2 platformView)
@@ -221,12 +223,20 @@ namespace Microsoft.Maui.Handlers
 			{
 				await webView.EnsureCoreWebView2Async();
 
+				var customSettings = VirtualView.InitializingWebView() as WebViewInitializingEventArgs;
+
 				webView.CoreWebView2.Settings.AreDevToolsEnabled = Handler?.DeveloperTools.Enabled ?? false;
 				webView.CoreWebView2.Settings.IsWebMessageEnabled = true;
+
+				// Allow additional custom settings to be applied through the WebViewInitializingEventArgs Class
+				customSettings?.AdditionalSettings?.Invoke(webView.CoreWebView2.Settings);
+
 				webView.CoreWebView2.AddWebResourceRequestedFilter($"{AppOrigin}*", CoreWebView2WebResourceContext.All);
 
 				webView.WebMessageReceived += OnWebMessageReceived;
 				webView.CoreWebView2.WebResourceRequested += OnWebResourceRequested;
+
+				VirtualView.InitializedWebView(webView);
 
 				return true;
 			}
