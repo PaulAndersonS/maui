@@ -32,7 +32,7 @@ Microsoft.Maui.WebViewInitializingEventArgs.AdditionalSettings.get -> System.Act
 Microsoft.Maui.WebViewInitializingEventArgs.AdditionalSettings.set -> void
 Microsoft.Maui.WebViewInitializingEventArgs.WebViewInitializingEventArgs() -> void
 Microsoft.Maui.WebViewInitializedEventArgs
-Microsoft.Maui.WebViewInitializedEventArgs.WebView.get -> Microsoft.Web.WebView2!
+Microsoft.Maui.WebViewInitializedEventArgs.WebView.get -> Microsoft.Web.WebView2.Core.CoreWebView2!
 Microsoft.Maui.WebViewInitializedEventArgs.WebView.set -> void
 Microsoft.Maui.WebViewInitializedEventArgs.WebViewInitializedEventArgs(object! webView) -> void
 Microsoft.Maui.IHybridWebView.InitializingWebView() -> object?
