@@ -42,6 +42,7 @@ namespace Microsoft.Maui.Controls.Compatibility.Platform.MacOS
 			UpdateMinimumDate();
 			UpdateFont();
 			UpdateTextColor();
+			UpdateFlowDirection();
 		}
 
 		protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -62,6 +63,8 @@ namespace Microsoft.Maui.Controls.Compatibility.Platform.MacOS
 				e.PropertyName == Picker.FontFamilyProperty.PropertyName ||
 				e.PropertyName == Picker.FontAttributesProperty.PropertyName)
 				UpdateFont();
+			else if (e.PropertyName == VisualElement.FlowDirectionProperty.PropertyName)
+				UpdateFlowDirection();
 		}
 
 		protected override void Dispose(bool disposing)
@@ -153,6 +156,11 @@ namespace Microsoft.Maui.Controls.Compatibility.Platform.MacOS
 				Control.TextColor = _defaultTextColor;
 			else
 				Control.TextColor = textColor.ToNSColor();
+		}
+
+		void UpdateFlowDirection()
+		{
+			Control?.UpdateFlowDirection(Element as IVisualElementController);
 		}
 	}
 }
