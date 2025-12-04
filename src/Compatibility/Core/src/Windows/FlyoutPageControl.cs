@@ -302,8 +302,7 @@ namespace Microsoft.Maui.Controls.Compatibility.Platform.UWP
 
 			UpdateMode();
 
-			if (_commandBarTcs != null)
-				_commandBarTcs.SetResult(_commandBar);
+			_commandBarTcs?.SetResult(_commandBar);
 
 			_titleViewManager = new TitleViewManager(this);
 		}
@@ -380,10 +379,7 @@ namespace Microsoft.Maui.Controls.Compatibility.Platform.UWP
 
 		void UpdateToolbarDynamicOverflowEnabled()
 		{
-			if (_commandBar != null)
-			{
-				_commandBar.IsDynamicOverflowEnabled = ToolbarDynamicOverflowEnabled;
-			}
+			_commandBar?.IsDynamicOverflowEnabled = ToolbarDynamicOverflowEnabled;
 		}
 
 	}

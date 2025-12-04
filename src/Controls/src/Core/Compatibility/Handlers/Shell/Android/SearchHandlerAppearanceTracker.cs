@@ -98,10 +98,7 @@ namespace Microsoft.Maui.Controls.Platform.Compatibility
 		}
 		void UpdateCharacterSpacing()
 		{
-			if (_editText is not null)
-			{
-				_editText.LetterSpacing = _searchHandler.CharacterSpacing.ToEm();
-			}
+			_editText?.LetterSpacing = _searchHandler.CharacterSpacing.ToEm();
 		}
 
 		void UpdateText()

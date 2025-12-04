@@ -530,10 +530,7 @@ namespace Microsoft.Maui.Controls.Platform.Compatibility
 
 
 			var renderer = page.Handler;
-			if (renderer != null)
-			{
-				renderer.DisconnectHandler();
-			}
+			renderer?.DisconnectHandler();
 		}
 
 		Element ElementForViewController(UIViewController viewController)
@@ -755,9 +752,9 @@ namespace Microsoft.Maui.Controls.Platform.Compatibility
 					source.TrySetResult(true);
 					tasks.Remove(viewController);
 				}
-				else if (popTask != null)
+				else
 				{
-					popTask.TrySetResult(true);
+					popTask?.TrySetResult(true);
 				}
 			}
 

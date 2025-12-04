@@ -48,8 +48,7 @@ namespace Microsoft.Maui.Controls.Compatibility.Platform.UWP
 				if (_tracker == value)
 					return;
 
-				if (_tracker != null)
-					_tracker.Dispose();
+				_tracker?.Dispose();
 
 				_tracker = value;
 			}
@@ -689,15 +688,13 @@ namespace Microsoft.Maui.Controls.Compatibility.Platform.UWP
 			if (_parentTabbedPage != null)
 			{
 				render = Platform.GetRenderer(_parentTabbedPage) as ITitleProvider;
-				if (render != null)
-					render.ShowTitle = (_parentTabbedPage.CurrentPage == Element) && NavigationPage.GetHasNavigationBar(_currentPage);
+				render?.ShowTitle = (_parentTabbedPage.CurrentPage == Element) && NavigationPage.GetHasNavigationBar(_currentPage);
 			}
 
 			if (_parentFlyoutPage != null)
 			{
 				render = Platform.GetRenderer(_parentFlyoutPage) as ITitleProvider;
-				if (render != null)
-					render.ShowTitle = (_parentFlyoutPage.Detail == Element) && NavigationPage.GetHasNavigationBar(_currentPage);
+				render?.ShowTitle = (_parentFlyoutPage.Detail == Element) && NavigationPage.GetHasNavigationBar(_currentPage);
 			}
 
 			if (render != null && render.ShowTitle)
