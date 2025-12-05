@@ -141,9 +141,9 @@ namespace Microsoft.Maui.Authentication
 				currentViewController = controller;
 				await WindowStateManager.Default.GetCurrentUIViewController().PresentViewControllerAsync(controller, true);
 #else
-        var opened = UIApplication.SharedApplication.OpenUrl(url);
-        if (!opened)
-            tcsResponse.TrySetException(new Exception("Error opening Safari"));
+				var opened = UIApplication.SharedApplication.OpenUrl(url);
+				if (!opened)
+					tcsResponse.TrySetException(new Exception("Error opening Safari"));
 #endif
 				return await tcsResponse.Task;
 			}

@@ -178,8 +178,7 @@ namespace Microsoft.Maui.Controls.Compatibility.Platform.iOS
 			if (Brush.IsNullOrEmpty(background))
 				return;
 
-			if (Control != null)
-				Control.UpdateBackground(background);
+			Control?.UpdateBackground(background);
 		}
 
 		public override void TouchesEnded(NSSet touches, UIEvent evt)
@@ -197,8 +196,7 @@ namespace Microsoft.Maui.Controls.Compatibility.Platform.iOS
 		{
 			var navigationController = GetUINavigationController(GetViewController());
 
-			if (navigationController != null)
-				navigationController.InteractivePopGestureRecognizer.Enabled = true;
+			navigationController?.InteractivePopGestureRecognizer.Enabled = true;
 
 			if (touches.AnyObject is UITouch anyObject)
 			{
@@ -251,23 +249,14 @@ namespace Microsoft.Maui.Controls.Compatibility.Platform.iOS
 					_panGestureRecognizer = null;
 				}
 
-				if (_contentView != null)
-				{
-					_contentView.Dispose();
-					_contentView = null;
-				}
+				_contentView?.Dispose();
+				_contentView = null;
 
-				if (_actionView != null)
-				{
-					_actionView.Dispose();
-					_actionView = null;
-				}
+				_actionView?.Dispose();
+				_actionView = null;
 
-				if (_swipeItemsRect != null)
-				{
-					_swipeItemsRect.Clear();
-					_swipeItemsRect = null;
-				}
+				_swipeItemsRect?.Clear();
+				_swipeItemsRect = null;
 			}
 
 			_isDisposed = true;
@@ -385,8 +374,7 @@ namespace Microsoft.Maui.Controls.Compatibility.Platform.iOS
 				switch (panGestureRecognizer.State)
 				{
 					case UIGestureRecognizerState.Began:
-						if (navigationController != null)
-							navigationController.InteractivePopGestureRecognizer.Enabled = false;
+						navigationController?.InteractivePopGestureRecognizer.Enabled = false;
 
 						HandleTouchInteractions(GestureStatus.Started, point);
 						break;
@@ -394,14 +382,12 @@ namespace Microsoft.Maui.Controls.Compatibility.Platform.iOS
 						HandleTouchInteractions(GestureStatus.Running, point);
 						break;
 					case UIGestureRecognizerState.Ended:
-						if (navigationController != null)
-							navigationController.InteractivePopGestureRecognizer.Enabled = true;
+						navigationController?.InteractivePopGestureRecognizer.Enabled = true;
 
 						HandleTouchInteractions(GestureStatus.Completed, point);
 						break;
 					case UIGestureRecognizerState.Cancelled:
-						if (navigationController != null)
-							navigationController.InteractivePopGestureRecognizer.Enabled = true;
+						navigationController?.InteractivePopGestureRecognizer.Enabled = true;
 
 						HandleTouchInteractions(GestureStatus.Canceled, point);
 						break;
@@ -627,8 +613,7 @@ namespace Microsoft.Maui.Controls.Compatibility.Platform.iOS
 
 			var swipeItemView = renderer?.NativeView;
 
-			if (swipeItemView != null)
-				swipeItemView.Hidden = !formsSwipeItemView.IsVisible;
+			swipeItemView?.Hidden = !formsSwipeItemView.IsVisible;
 
 			return swipeItemView;
 		}
@@ -834,8 +819,7 @@ namespace Microsoft.Maui.Controls.Compatibility.Platform.iOS
 
 			var parent = this.GetParentOfType<UIScrollView>();
 
-			if (parent != null)
-				parent.ScrollEnabled = _isScrollEnabled;
+			parent?.ScrollEnabled = _isScrollEnabled;
 		}
 
 		bool TouchInsideContent(CGPoint point)
@@ -1036,11 +1020,8 @@ namespace Microsoft.Maui.Controls.Compatibility.Platform.iOS
 				_actionView = null;
 			}
 
-			if (_swipeItemsRect != null)
-			{
-				_swipeItemsRect.Clear();
-				_swipeItemsRect = null;
-			}
+			_swipeItemsRect?.Clear();
+			_swipeItemsRect = null;
 
 			UpdateIsOpen(false);
 		}

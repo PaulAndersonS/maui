@@ -10,6 +10,7 @@ using Microsoft.Maui.Controls;
 using Microsoft.Maui.Graphics;
 
 namespace Maui.Controls.Sample;
+
 public class Grouping<TKey, TItem> : ObservableCollection<TItem>
 {
 	public TKey Key { get; }
