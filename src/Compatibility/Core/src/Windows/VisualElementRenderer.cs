@@ -156,8 +156,7 @@ namespace Microsoft.Maui.Controls.Compatibility.Platform.UWP
 				// and may cause issues
 				//Loaded += (sender, args) =>
 				//{
-				if (Packager != null)
-					Packager.Load();
+				Packager?.Load();
 				//};
 			}
 
@@ -170,8 +169,7 @@ namespace Microsoft.Maui.Controls.Compatibility.Platform.UWP
 			}
 
 			controller = element;
-			if (controller != null)
-				controller.EffectControlProvider = this;
+			controller?.EffectControlProvider = this;
 		}
 
 		public event EventHandler<ElementChangedEventArgs<TElement>> ElementChanged;
@@ -201,10 +199,7 @@ namespace Microsoft.Maui.Controls.Compatibility.Platform.UWP
 
 			var myRect = new WRect(0, 0, finalSize.Width, finalSize.Height);
 
-			if (Control != null)
-			{
-				Control.Arrange(myRect);
-			}
+			Control?.Arrange(myRect);
 
 			List<UIElement> arrangedChildren = null;
 			for (var i = 0; i < ElementController.LogicalChildren.Count; i++)

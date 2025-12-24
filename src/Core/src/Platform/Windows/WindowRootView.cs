@@ -59,12 +59,10 @@ namespace Microsoft.Maui.Platform
 			get => _toolbar;
 			set
 			{
-				if (_toolbar != null)
-					_toolbar.SetMenuBar(null);
+				_toolbar?.SetMenuBar(null);
 
 				_toolbar = value;
-				if (NavigationViewControl != null)
-					NavigationViewControl.Toolbar = Toolbar;
+				NavigationViewControl?.Toolbar = Toolbar;
 
 				_toolbar?.SetMenuBar(MenuBar);
 			}
@@ -486,10 +484,7 @@ namespace Microsoft.Maui.Platform
 		internal void SetTitleBarVisibility(UI.Xaml.Visibility visibility)
 		{
 			// Set default and custom titlebar container visibility
-			if (AppTitleBarContainer is not null)
-			{
-				AppTitleBarContainer.Visibility = visibility;
-			}
+			AppTitleBarContainer?.Visibility = visibility;
 
 			// Set the back/flyout button container visibility
 			if (NavigationViewControl is not null &&

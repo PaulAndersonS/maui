@@ -93,8 +93,7 @@ namespace Microsoft.Maui
 			{
 				_graphicsView.Tapped -= ViewTapped;
 				_graphicsView.PointerMoved -= PointerMoved;
-				if (_panel != null)
-					_panel.RemoveOverlay(_graphicsView);
+				_panel?.RemoveOverlay(_graphicsView);
 				_graphicsView = null;
 			}
 			IsPlatformViewInitialized = false;
@@ -141,8 +140,7 @@ namespace Microsoft.Maui
 
 		partial void OnDisableUITouchEventPassthroughSet()
 		{
-			if (_graphicsView != null)
-				_graphicsView.IsHitTestVisible = DisableUITouchEventPassthrough;
+			_graphicsView?.IsHitTestVisible = DisableUITouchEventPassthrough;
 		}
 	}
 }

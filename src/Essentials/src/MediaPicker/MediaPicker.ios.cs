@@ -145,13 +145,10 @@ namespace Microsoft.Maui.Media
 				pickerRef.ModalPresentationStyle = UIModalPresentationStyle.PageSheet;
 			}
 
-			if (pickerRef.PresentationController is not null)
-			{
-				pickerRef.PresentationController.Delegate = new PhotoPickerPresentationControllerDelegate
+			pickerRef.PresentationController?.Delegate = new PhotoPickerPresentationControllerDelegate
 				{
 					Handler = () => tcs.TrySetResult(null)
 				};
-			}
 
 			await vc.PresentViewControllerAsync(pickerRef, true);
 
