@@ -158,34 +158,19 @@ namespace Microsoft.Maui.Controls.Handlers.Compatibility
 				templatedItems.GroupedCollectionChanged -= OnGroupedCollectionChanged;
 			}
 
-			if (_dataSource != null)
-			{
-				_dataSource.Dispose();
-				_dataSource = null;
-			}
+			_dataSource?.Dispose();
+			_dataSource = null;
 
-			if (_tableViewController != null)
-			{
-				_tableViewController.Dispose();
-				_tableViewController = null;
-			}
+			_tableViewController?.Dispose();
+			_tableViewController = null;
 
-			if (_headerRenderer != null)
-			{
-				_headerRenderer.VirtualView?.DisposeModalAndChildHandlers();
-				_headerRenderer = null;
-			}
-			if (_footerRenderer != null)
-			{
-				_footerRenderer.VirtualView?.DisposeModalAndChildHandlers();
-				_footerRenderer = null;
-			}
+			_headerRenderer?.VirtualView?.DisposeModalAndChildHandlers();
+			_headerRenderer = null;
+			_footerRenderer?.VirtualView?.DisposeModalAndChildHandlers();
+			_footerRenderer = null;
 
-			if (_backgroundUIView != null)
-			{
-				_backgroundUIView.Dispose();
-				_backgroundUIView = null;
-			}
+			_backgroundUIView?.Dispose();
+			_backgroundUIView = null;
 
 			var headerView = ListView?.HeaderElement as VisualElement;
 			if (headerView != null)
@@ -446,8 +431,7 @@ namespace Microsoft.Maui.Controls.Handlers.Compatibility
 					if (OperatingSystem.IsIOSVersionAtLeast(11) || OperatingSystem.IsTvOSVersionAtLeast(11))
 						this.BeginInvokeOnMainThread(() =>
 						{
-							if (Control != null /*&& !_disposed*/)
-								Control.ScrollToRow(NSIndexPath.FromRowSection(index, 0), position, e.ShouldAnimate);
+							Control?.ScrollToRow(NSIndexPath.FromRowSection(index, 0), position, e.ShouldAnimate);
 						});
 					else
 						Control.ScrollToRow(NSIndexPath.FromRowSection(index, 0), position, e.ShouldAnimate);
@@ -535,8 +519,7 @@ namespace Microsoft.Maui.Controls.Handlers.Compatibility
 		void UpdateIsRefreshing()
 		{
 			var refreshing = Element.IsRefreshing;
-			if (_tableViewController != null)
-				_tableViewController.UpdateIsRefreshing(refreshing);
+			_tableViewController?.UpdateIsRefreshing(refreshing);
 		}
 
 		void UpdateItems(NotifyCollectionChangedEventArgs e, int section, bool resetWhenGrouped)
@@ -756,8 +739,7 @@ namespace Microsoft.Maui.Controls.Handlers.Compatibility
 		{
 			var color = Element.RefreshControlColor;
 
-			if (_tableViewController != null)
-				_tableViewController.UpdateRefreshControlColor(color == null ? null : color.ToPlatform());
+			_tableViewController?.UpdateRefreshControlColor(color?.ToPlatform());
 		}
 
 		void UpdateVerticalScrollBarVisibility()
@@ -1422,8 +1404,7 @@ namespace Microsoft.Maui.Controls.Handlers.Compatibility
 			{
 				var contextCell = cell as ContextActionsCell;
 				cell.BackgroundColor = color;
-				if (contextCell != null)
-					contextCell.ContentCell.BackgroundColor = color;
+				contextCell?.ContentCell.BackgroundColor = color;
 			}
 
 			int TemplateIdForPath(NSIndexPath indexPath)
@@ -1724,8 +1705,7 @@ namespace Microsoft.Maui.Controls.Handlers.Compatibility
 
 		public void UpdateRefreshControlColor(UIColor color)
 		{
-			if (RefreshControl != null)
-				RefreshControl.TintColor = color;
+			RefreshControl?.TintColor = color;
 		}
 
 		protected override void Dispose(bool disposing)
