@@ -3,6 +3,7 @@ using UITest.Appium;
 using UITest.Core;
 
 namespace Microsoft.Maui.TestCases.Tests;
+
 public class GroupingFeatureTests : UITest
 {
 	public const string GroupingFeatureMatrix = "CollectionView Feature Matrix";
